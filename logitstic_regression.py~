@@ -1,9 +1,4 @@
 import nibabel as nib
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, Dropout
-from tensorflow.keras.utils import to_categorical
 import numpy as np
 import pandas as pd
 import json
@@ -13,6 +8,7 @@ import sys
 import random
 from collections import OrderedDict
 from scipy import stats
+from sklearn.linear_model import LogisticRegression
 
 def iterate_dir(p):
     print('Finding nifti files...',end='')
@@ -26,15 +22,14 @@ def iterate_dir(p):
 def load(l, subjs):
     print('Loading nifti files...',end='')
     v=OrderedDict()
-    found=False
     for d in l:
         for s in subjs:
             if s in d:
                 img=nib.load(d)
                 dat=img.get_fdata()
                 dat[np.isnan(dat)]=0
-                dat_2d = dat.reshape((dat.shape[0]*dat.shape[1]), dat.shape[2])                                                                                                                                       
-                dat_2d = dat_2d.transpose()  
+                dat_2d = dat.reshape((dat.shape[0]*dat.shape[1]), dat.shape[2])
+                dat_2d = dat_2d.transpose()
                 v[d.split('/')[-1]]=dat_2d
     print('Done.')
     return v
@@ -84,24 +79,7 @@ def j_save(imgs,labels,cmap):
         for c in cmap:
             w.write('%s -> %s\n' % (c,cmap[c]))
 
-def build_model(img_dim):
-    model = Sequential()
-    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', kernel_initializer='he_uniform', input_shape=(91,9919,1)))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.5))
-    model.add(Conv2D(64, kernel_size=(3, 3), activation='relu', kernel_initializer='he_uniform'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.5))
-    model.add(Flatten())
-    model.add(Dense(256, activation='relu', kernel_initializer='he_uniform'))
-    model.add(Dense(2, activation='softmax'))
-    model.summary()
-    model.compile(loss='categorical_crossentropy',
-          optimizer=keras.optimizers.Adam(lr=0.0001),
-          metrics=['accuracy'])
-#    model.compile(optimizer=keras.optimizers.Adam(lr=0.0001),
-#              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-#              metrics=['accuracy'])
+def build_model():
     return model
 
 def predict(model,test_images,test_labels):
@@ -138,17 +116,11 @@ def classify_images(imgs,labels):
         train_images=imgs[0:train]
         test_labels=labels[train:]
         test_images=imgs[train:]
-        model=build_model(train_images.shape)
+        reg = LogisticRegression()
+        reg.fit(train_images,train_labels)
+        #model=build_model(train_images.shape)
         #model.fit(train_images, train_labels, validation_split=0.2, epochs=5)
-        train_binary = to_categorical(train_labels)
-        test_binary = to_categorical(test_labels)
-        model.fit(train_images, train_binary,
-                batch_size=64,
-                epochs=30,
-                verbose=1,
-                validation_split=0.2)
-        test_loss, test_acc = model.evaluate(test_images,  test_binary, verbose=2)
-        print('\nTest accuracy:', test_acc)
+        print('\nTest accuracy:', reg.score(test_images,test_labels))
     #predict(model,test_images,test_labels)
         
 def main():
