@@ -96,7 +96,7 @@ def build_model(img_dim):
     model.add(Dense(2, activation='softmax'))
     model.summary()
     model.compile(loss='categorical_crossentropy',
-          optimizer=keras.optimizers.Adam(lr=0.001),
+          optimizer=keras.optimizers.Adam(lr=0.0001),
           metrics=['accuracy'])
 #    model.compile(optimizer=keras.optimizers.Adam(lr=0.0001),
 #              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -153,7 +153,7 @@ def classify_images(imgs,labels):
 def main():
     t=time.time()
     [all_labels, mapping,subj] = get_labels('classes_restricted.csv')
-    hdrs = iterate_dir('../../../SN_betaweights_n812')
+    hdrs = iterate_dir('../SN_betaweights_n812')
     imgs = load(hdrs,subj)
     all_images = format_data(imgs)
     classify_images(all_images,all_labels)
