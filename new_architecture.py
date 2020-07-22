@@ -131,7 +131,7 @@ def classify_images(imgs,labels):
     labels=np.asarray(labels)
     tot=len(labels)
     for split in range(0,5):
-        img,labels=shuffle_splits(imgs,labels,split)
+        imgs,labels=shuffle_splits(imgs,labels,split)
         train=int(tot*0.8)
         train_labels=labels[0:train]
         print('M - training set: %d/%d' % (np.sum(train_labels),train))
