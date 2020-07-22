@@ -1,3 +1,4 @@
+#this is working very well as is: ~80-85% accuracy
 import nibabel as nib
 import numpy as np
 import pandas as pd
@@ -105,7 +106,7 @@ def classify_images(imgs,labels):
         train_images=imgs[0:train]
         test_labels=labels[train:]
         test_images=imgs[train:]
-        dt = RandomForestClassifier(n_estimators=750)
+        dt = RandomForestClassifier(n_estimators=500)
         dt.fit(np.reshape(train_images, (train_images.shape[0], -1)),train_labels)
         #model=build_model(train_images.shape)
         #model.fit(train_images, train_labels, validation_split=0.2, epochs=5)
