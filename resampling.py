@@ -136,6 +136,7 @@ def shuffle_splits(imgs,labels,split):
 def classify_images(imgs,labels):
     tot=len(labels)
     oversample = RandomOverSampler(sampling_strategy='minority')
+    datagen = ImageDataGenerator()
     for split in range(0,5):
         channels = 1
         img,labels=shuffle_splits(imgs,labels,split)
@@ -145,15 +146,15 @@ def classify_images(imgs,labels):
         print('M - training set: %d/%d' % (np.sum(train_labels),train))
         train_images=imgs[0:train]
         print(Counter(train_labels))
-        datagen = ImageDataGenerator() 
-        balanced_gen = BalancedDataGenerator(train_images,train_labels, datagen, batch_size=32)
+        
+        balanced_gen = BalancedDataGenerator(train_images,train_labels, datagen, batch_size=128)
         steps_per_epoch = balanced_gen.steps_per_epoch
         print(Counter(train_labels))
         test_labels=labels[train:]
         test_images=imgs[train:]
         
         model=build_model(train_images.shape)
-        model.fit_generator(balanced_gen,steps_per_epoch=steps_per_epoch, validation_split=.2, epochs=5)
+        model.fit_generator(gen.flow(balanced_gen,steps_per_epoch=steps_per_epoch, validation_split=.2, epochs=5))
         test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
         print('\nTest accuracy:', test_acc)
     predict(model,test_images,test_labels)

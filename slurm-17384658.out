@@ -1,6 +1,0 @@
-Loading labels...Done.
-Finding nifti files...Done.
-Loading nifti files...Done.
-Formatting numpy array...Done.
-Fitting 3 folds for each of 100 candidates, totalling 300 fits
-[Parallel(n_jobs=-1)]: Using backend LokyBackend with 12 concurrent workers.
