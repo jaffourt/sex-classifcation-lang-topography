@@ -116,6 +116,7 @@ def classify_images(imgs,labels):
     labels=np.asarray(labels)
     gen = ImageDataGenerator(rotation_range=10, zoom_range = 0.1, width_shift_range=0.1, height_shift_range=0.1)
     tot=len(labels)
+    accuracies = []
     for split in range(0,5):
         imgs,labels=shuffle_splits(imgs,labels,split)
         train=int(tot*0.8)
@@ -123,9 +124,9 @@ def classify_images(imgs,labels):
         train_images=imgs[0:train]
         test_labels=labels[train:]
         test_images=imgs[train:]
-        y_train = to_categorical(train_labels, num_classes=2)
-        y_test = to_categorical(test_labels, num_classes=2)
-        X_train, X_val, y_train, y_val = train_test_split(train_images, y_train, test_size=0.15, random_state=42)
+        #y_train = to_categorical(train_labels, num_classes=2)
+        #y_test = to_categorical(test_labels, num_classes=2)
+        #X_train, X_val, y_train, y_val = train_test_split(train_images, y_train, test_size=0.15, random_state=42)
         model=build_model()
         epochs=20
         batch_size=64
@@ -136,8 +137,10 @@ def classify_images(imgs,labels):
         #model.fit_generator(gen.flow(X_train, y_train, batch_size=batch_size),
         #            epochs=epochs, validation_data=(X_val, y_val),
         #                    verbose=2, steps_per_epoch=X_train.shape[0]//batch_size,callbacks=[scheduler])
-        test_loss, test_acc = model.evaluate(test_images,  y_test, verbose=2)
+        test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
         print('\nTest accuracy:', test_acc)
+        accuracies.append(test_acc)
+    return accuracies 
 
 def main():
     t=time.time()
@@ -145,7 +148,9 @@ def main():
     hdrs = iterate_dir('../classifiers/SN_betaweights_n812')
     imgs = load(hdrs,subj)
     all_images = format_data(imgs)
-    classify_images(all_images,all_labels)
+    accuracies = classify_images(all_images,all_labels)
+    print("All accuracies:", accuracies)
+    print("Avg accuracy:", sum(accuracies)/len(accuracies))
     #j_save(all_images,all_labels,mapping)
     print("It took %ds to run" % (time.time() - t))
 

@@ -1,0 +1,72 @@
+2020-08-04 15:23:23.861537: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2020-08-04 15:23:23.887946: E tensorflow/stream_executor/cuda/cuda_driver.cc:313] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+2020-08-04 15:23:23.887987: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: node032
+2020-08-04 15:23:23.887998: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: node032
+2020-08-04 15:23:23.888083: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:200] libcuda reported version is: 440.82.0
+2020-08-04 15:23:23.888126: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:204] kernel reported version is: 440.82.0
+2020-08-04 15:23:23.888136: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:310] kernel version seems to match DSO: 440.82.0
+2020-08-04 15:23:23.888476: I tensorflow/core/platform/cpu_feature_guard.cc:143] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-08-04 15:23:23.900589: I tensorflow/core/platform/profile_utils/cpu_utils.cc:102] CPU Frequency: 2600165000 Hz
+2020-08-04 15:23:23.901534: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55c1f112dd70 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2020-08-04 15:23:23.901555: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+Loading labels...Done.
+Finding nifti files...Done.
+Loading nifti files...Done.
+Formatting numpy array...Done.
+Epoch 1/20
+Traceback (most recent call last):
+  File "cnn3d.py", line 158, in <module>
+    main()
+  File "cnn3d.py", line 151, in main
+    accuracies = classify_images(all_images,all_labels)
+  File "cnn3d.py", line 136, in classify_images
+    model.fit(X_train, y_train, validation_split=0.2, epochs=epochs)
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/keras/engine/training.py", line 66, in _method_wrapper
+    return method(self, *args, **kwargs)
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/keras/engine/training.py", line 848, in fit
+    tmp_logs = train_function(iterator)
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/eager/def_function.py", line 580, in __call__
+    result = self._call(*args, **kwds)
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/eager/def_function.py", line 627, in _call
+    self._initialize(args, kwds, add_initializers_to=initializers)
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/eager/def_function.py", line 506, in _initialize
+    *args, **kwds))
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/eager/function.py", line 2446, in _get_concrete_function_internal_garbage_collected
+    graph_function, _, _ = self._maybe_define_function(args, kwargs)
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/eager/function.py", line 2777, in _maybe_define_function
+    graph_function = self._create_graph_function(args, kwargs)
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/eager/function.py", line 2667, in _create_graph_function
+    capture_by_value=self._capture_by_value),
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/framework/func_graph.py", line 981, in func_graph_from_py_func
+    func_outputs = python_func(*func_args, **func_kwargs)
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/eager/def_function.py", line 441, in wrapped_fn
+    return weak_wrapped_fn().__wrapped__(*args, **kwds)
+  File "/home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/framework/func_graph.py", line 968, in wrapper
+    raise e.ag_error_metadata.to_exception(e)
+ValueError: in user code:
+
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/keras/engine/training.py:571 train_function  *
+        outputs = self.distribute_strategy.run(
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/distribute/distribute_lib.py:951 run  **
+        return self._extended.call_for_each_replica(fn, args=args, kwargs=kwargs)
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/distribute/distribute_lib.py:2290 call_for_each_replica
+        return self._call_for_each_replica(fn, args, kwargs)
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/distribute/distribute_lib.py:2649 _call_for_each_replica
+        return fn(*args, **kwargs)
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/keras/engine/training.py:533 train_step  **
+        y, y_pred, sample_weight, regularization_losses=self.losses)
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/keras/engine/compile_utils.py:205 __call__
+        loss_value = loss_obj(y_t, y_p, sample_weight=sw)
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/keras/losses.py:143 __call__
+        losses = self.call(y_true, y_pred)
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/keras/losses.py:246 call
+        return self.fn(y_true, y_pred, **self._fn_kwargs)
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/keras/losses.py:1595 binary_crossentropy
+        K.binary_crossentropy(y_true, y_pred, from_logits=from_logits), axis=-1)
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/keras/backend.py:4692 binary_crossentropy
+        return nn.sigmoid_cross_entropy_with_logits(labels=target, logits=output)
+    /home/lrakocev/.local/lib/python3.7/site-packages/tensorflow/python/ops/nn_impl.py:172 sigmoid_cross_entropy_with_logits
+        (logits.get_shape(), labels.get_shape()))
+
+    ValueError: logits and labels must have the same shape ((None, 1) vs (None, 2))
+
