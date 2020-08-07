@@ -88,15 +88,11 @@ def build_model():
     model.add(MaxPool3D(pool_size=(2,2,2)))
     model.add(Dropout(0.25))
     #model.add(Conv(32, (3,3,3)))
-    #model.add(Conv(64, (3,3,3)))
-    #model.add(BatchNormalization())
     #model.add(MaxPool3D())
     #model.add(Dropout(0.25))
     model.add(Flatten())
     #model.add(Dense(4096, activation='relu'))
-    #model.add(Dropout(0.5))
     #model.add(Dense(1024, activation='relu'))
-    #model.add(Dropout(0.5))
     model.add(Dense(1, activation='sigmoid'))
     return model
 
@@ -125,7 +121,7 @@ def classify_images(imgs,labels):
         test_labels=labels[train:]
         test_images=imgs[train:]
         #y_train = to_categorical(train_labels, num_classes=2)
-        #y_test = to_categorical(test_labels, num_classes=2)
+        y_test = to_categorical(test_labels, num_classes=2)
         #X_train, X_val, y_train, y_val = train_test_split(train_images, y_train, test_size=0.15, random_state=42)
         model=build_model()
         epochs=20
@@ -137,7 +133,7 @@ def classify_images(imgs,labels):
         #model.fit_generator(gen.flow(X_train, y_train, batch_size=batch_size),
         #            epochs=epochs, validation_data=(X_val, y_val),
         #                    verbose=2, steps_per_epoch=X_train.shape[0]//batch_size,callbacks=[scheduler])
-        test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+        test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
         print('\nTest accuracy:', test_acc)
         accuracies.append(test_acc)
     return accuracies 
